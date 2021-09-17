@@ -64,6 +64,12 @@ setup_symlinks() {
     done
 }
 
+install_zinit() {
+    title "Install zinit"
+    
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/zdharma/zinit/master/doc/install.sh)"
+}
+
 case "$1" in
     backup)
         backup
