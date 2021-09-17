@@ -1,7 +1,7 @@
+#!bin/sh
+
 # Set up the prompt
-
 export TERM=xterm-256color
-
 setopt histignorealldups sharehistory
 
 # Keep 1000 lines of history within the shell and save it to ~/.zsh_history:
@@ -9,20 +9,24 @@ HISTSIZE=10000
 SAVEHIST=10000
 HISTFILE=~/.zsh_history
 
-# alias
-# abbrev-alias ls='ls --color=auto'
-abbrev-alias l='ls -CF'   # 列をそろえない、各分類を表示(*ならコマンド、/ならディレクトリ等)
-abbrev-alias la='ls -alF' # 全てを表示、整列させる、各分類を表示
+ZINIT_HOME="${ZINIT_HOME:-$ZPLG_HOME}"
+if [ -z "$ZINIT_HOME" ]; then
+    ZINIT_HOME="${ZDOTDIR:-$HOME}/.zinit"
+fi
 
-abbrev-alias v='vim'
-abbrev-alias vz='vim ~/.zshrc'
+ZINIT_BIN_DIR_NAME="${ZINIT_BIN_DIR_NAME:-$ZPLG_BIN_DIR_NAME}"
+if [ -z "$ZINIT_BIN_DIR_NAME" ]; then
+    ZINIT_BIN_DIR_NAME="bin"
+fi
 
-abbrev-alias relogin='exec $SHELL -l'
+if [[ -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
+    for file in zinit/*.zinit
+    do
+        . $file
+    done
+fi
 
-abbrev-alias -g G='| grep --color=auto'	# grep
-abbrev-alias -g C='| wc -l'	# count
-abbrev-alias -g H='| head'	# head
-abbrev-alias -g T='| tail'	# tail
-
-abbrev-alias actv='source .venv/bin/activate'
-abbrev-alias dctv='deactivate'
+for file in zsh/*.zsh
+do
+    . $file
+done
