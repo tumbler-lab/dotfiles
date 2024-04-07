@@ -20,13 +20,47 @@ if [ -z "$ZINIT_BIN_DIR_NAME" ]; then
 fi
 
 if [[ -f $ZINIT_HOME/$ZINIT_BIN_DIR_NAME/zinit.zsh ]]; then
-    for file in zinit/*.zinit
+    for file in $HOME/dotfiles/zinit/*.zinit
     do
         . $file
     done
 fi
 
-for file in zsh/*.zsh
+for file in $HOME/dotfiles/zsh/*.zsh
 do
     . $file
 done
+
+# my shell scripts 
+export PATH="$HOME/dotfiles/scripts/bash:$PATH"
+# end my shellscripts
+
+export PATH="$HOME/.local/bin:$PATH"
+# setting for pyenv virtualenv
+eval "$(pyenv virtualenv-init -)"
+# end setting for pyenv virtualenv
+
+# setting for nvm
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# end setting for nvm
+
+# setting for go
+export PATH=$PATH:/usr/local/go/bin
+# end setting for go
+
+## ghqとの連携。ghqの管理化にあるリポジトリを一覧表示する。ctrl - ]にバインド。
+function peco-src () {
+  local selected_dir=$(ghq list -p | peco --prompt="repositories >" --query "$LBUFFER")
+  if [ -n "$selected_dir" ]; then
+    BUFFER="cd ${selected_dir}"
+    zle accept-line
+  fi
+  zle clear-screen
+}
+zle -N peco-src
+bindkey '^]' peco-src
+
+# x server settings
+export DISPLAY=localhost:0.0
